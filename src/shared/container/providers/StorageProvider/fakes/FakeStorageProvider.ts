@@ -1,7 +1,8 @@
 import IStorageProvider from '../models/IStorageProvider';
 
 class DiskStorageProvider implements IStorageProvider {
-  private storage: string[];
+  private storage: string[] = [];
+
   public async saveFile(file: string): Promise<string> {
     this.storage.push(file);
 
