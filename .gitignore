@@ -6,3 +6,6 @@ temp/
 
 tmp/
 !tmp/.gitkeep
+
+coverage/
+.DS_Store
