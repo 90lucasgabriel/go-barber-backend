@@ -23,7 +23,7 @@ describe('CreateAppointment', () => {
   });
 
   it('should not be able to create a new appointment at same time', async () => {
-    // Prepare
+    // Arrange
     const fakeAppointmentsRepository = new FakeAppointmentsRepository();
     const createAppointment = new CreateAppointmentService(
       fakeAppointmentsRepository,
@@ -34,7 +34,7 @@ describe('CreateAppointment', () => {
       provider_id: '123456',
     };
 
-    // Execute
+    // Act
     await createAppointment.execute(appointmentData);
     const duplicatedAppointment = createAppointment.execute(appointmentData);
 
