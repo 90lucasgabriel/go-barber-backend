@@ -29,19 +29,16 @@ describe('CreateAppointment', () => {
       fakeAppointmentsRepository,
     );
     const appointmentDate = new Date(2020, 4, 10, 11);
+    const appointmentData = {
+      date: appointmentDate,
+      provider_id: '123456',
+    };
 
     // Execute
-    const appointment = await createAppointment.execute({
-      date: appointmentDate,
-      provider_id: '12345678',
-    });
+    await createAppointment.execute(appointmentData);
+    const duplicatedAppointment = createAppointment.execute(appointmentData);
 
     // Assert
-    expect(
-      createAppointment.execute({
-        date: appointmentDate,
-        provider_id: '12345678',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+    expect(duplicatedAppointment).rejects.toBeInstanceOf(AppError);
   });
 });
