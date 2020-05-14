@@ -3,19 +3,25 @@ import AppError from '@shared/errors/AppError';
 import FakeAppointmentsRepository from '@modules/appointments/repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentsService';
 
+let fakeAppointmentsRepository: FakeAppointmentsRepository;
+let createAppointmentService: CreateAppointmentService;
 describe('CreateAppointment', () => {
-  it('should be able to create a new appointment', async () => {
-    // Prepare
-    const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-    const createAppointment = new CreateAppointmentService(
+  beforeEach(() => {
+    fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    createAppointmentService = new CreateAppointmentService(
       fakeAppointmentsRepository,
     );
+  });
 
-    // Execute
-    const appointment = await createAppointment.execute({
+  it('should be able to create a new appointment', async () => {
+    // Prepare
+    const appointmentData = {
       date: new Date(),
       provider_id: '12345678',
-    });
+    };
+
+    // Execute
+    const appointment = await createAppointmentService.execute(appointmentData);
 
     // Assert
     expect(appointment).toHaveProperty('id');
@@ -24,10 +30,6 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create a new appointment at same time', async () => {
     // Arrange
-    const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-    const createAppointment = new CreateAppointmentService(
-      fakeAppointmentsRepository,
-    );
     const appointmentDate = new Date(2020, 4, 10, 11);
     const appointmentData = {
       date: appointmentDate,
@@ -35,8 +37,10 @@ describe('CreateAppointment', () => {
     };
 
     // Act
-    await createAppointment.execute(appointmentData);
-    const duplicatedAppointment = createAppointment.execute(appointmentData);
+    await createAppointmentService.execute(appointmentData);
+    const duplicatedAppointment = createAppointmentService.execute(
+      appointmentData,
+    );
 
     // Assert
     expect(duplicatedAppointment).rejects.toBeInstanceOf(AppError);

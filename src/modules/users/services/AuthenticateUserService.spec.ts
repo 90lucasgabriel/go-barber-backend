@@ -5,19 +5,27 @@ import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHa
 import CreateUserService from './CreateUserService';
 import AuthenticateUserService from './AuthenticateUserService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+let createUserService: CreateUserService;
+let authenticateUserService: AuthenticateUserService;
+
 describe('AuthenticateUser', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+    createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+    authenticateUserService = new AuthenticateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+  });
+
   it('should be able to authenticate', async () => {
     // Arrange
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-    const authenticateUser = new AuthenticateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
     const userData = {
       name: 'John Doe',
       email: 'johndoe@email.com',
@@ -29,8 +37,8 @@ describe('AuthenticateUser', () => {
     };
 
     // Act
-    const user = await createUser.execute(userData);
-    const response = await authenticateUser.execute(authData);
+    const user = await createUserService.execute(userData);
+    const response = await authenticateUserService.execute(authData);
 
     // Assert
     expect(response).toHaveProperty('token');
@@ -39,13 +47,6 @@ describe('AuthenticateUser', () => {
 
   it('should not be able to authenticate with non existing user', async () => {
     // Arrange
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const authenticateUser = new AuthenticateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
     const userData = {
       name: 'John Doe',
       email: 'johndoe@email.com',
@@ -53,7 +54,7 @@ describe('AuthenticateUser', () => {
     };
 
     // Act
-    const response = authenticateUser.execute(userData);
+    const response = authenticateUserService.execute(userData);
 
     // Assert
     expect(response).rejects.toBeInstanceOf(AppError);
@@ -61,16 +62,6 @@ describe('AuthenticateUser', () => {
 
   it('should not be able to authenticate with wrong password', async () => {
     // Arrange
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-    const authenticateUser = new AuthenticateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
     const userData = {
       name: 'John Doe',
       email: 'johndoe@email.com',
@@ -82,8 +73,8 @@ describe('AuthenticateUser', () => {
     };
 
     // Act
-    await createUser.execute(userData);
-    const response = authenticateUser.execute(authData);
+    await createUserService.execute(userData);
+    const response = authenticateUserService.execute(authData);
 
     // Assert
     expect(response).rejects.toBeInstanceOf(AppError);

@@ -4,15 +4,20 @@ import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepo
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import CreateUserService from './CreateUserService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+let createUserService: CreateUserService;
 describe('CreateUser', () => {
-  it('should be able to create a new user', async () => {
-    // Arrange
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createUser = new CreateUserService(
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+    createUserService = new CreateUserService(
       fakeUsersRepository,
       fakeHashProvider,
     );
+  });
+  it('should be able to create a new user', async () => {
+    // Arrange
     const userData = {
       name: 'John Doe',
       email: 'johndoe@email.com',
@@ -20,7 +25,7 @@ describe('CreateUser', () => {
     };
 
     // Act
-    const user = await createUser.execute(userData);
+    const user = await createUserService.execute(userData);
 
     // Assert
     expect(user).toHaveProperty('id');
@@ -28,12 +33,6 @@ describe('CreateUser', () => {
 
   it('should not be able to create a new user with the same email from another', async () => {
     // Arrange
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
     const userData = {
       name: 'John Doe',
       email: 'johndoe@email.com',
@@ -41,8 +40,8 @@ describe('CreateUser', () => {
     };
 
     // Act
-    await createUser.execute(userData);
-    const duplicatedUser = createUser.execute(userData);
+    await createUserService.execute(userData);
+    const duplicatedUser = createUserService.execute(userData);
 
     // Assert
     expect(duplicatedUser).rejects.toBeInstanceOf(AppError);
