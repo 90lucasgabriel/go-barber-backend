@@ -16,7 +16,7 @@ describe('UpdateProfile', () => {
       fakeHashProvider,
     );
   });
-  it('should be able to update profile ', async () => {
+  it('should be able to update profile.', async () => {
     // Arrange
     const userData = {
       name: 'John Doe',
@@ -38,6 +38,21 @@ describe('UpdateProfile', () => {
     // Assert
     expect(updatedUser.name).toBe(updateProfileData.name);
     expect(updatedUser.email).toBe(updateProfileData.email);
+  });
+
+  it('should not be able to update profile with non-existing user.', async () => {
+    // Arrange
+    const userData = {
+      user_id: 'non-existing-user-id',
+      name: 'John Doe',
+      email: 'johndoe@email.com',
+      password: '123456',
+    };
+
+    // Act and Assert
+    await expect(
+      updateProfileService.execute(userData),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to change to another user email', async () => {
