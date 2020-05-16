@@ -17,6 +17,7 @@ describe('CreateAppointment', () => {
     // Prepare
     const appointmentData = {
       date: new Date(),
+      user_id: '12345678',
       provider_id: '12345678',
     };
 
@@ -33,6 +34,7 @@ describe('CreateAppointment', () => {
     const appointmentDate = new Date(2020, 4, 10, 11);
     const appointmentData = {
       date: appointmentDate,
+      user_id: '123456',
       provider_id: '123456',
     };
 
