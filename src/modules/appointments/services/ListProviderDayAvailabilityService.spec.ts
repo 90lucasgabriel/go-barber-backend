@@ -1,5 +1,5 @@
+import 'reflect-metadata';
 import { uuid } from 'uuidv4';
-// import AppError from '@shared/errors/AppError';
 
 import ListProviderDayAvailabilityService from './ListProviderDayAvailabilityService';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
