@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "aws-sdk": "^2.681.0",
     "bcryptjs": "^2.4.3",
     "celebrate": "^12.1.1",
     "class-transformer": "^0.2.3",
@@ -27,6 +28,7 @@
     "uuidv4": "^6.0.7"
   },
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.6",
     "@types/dotenv": "^8.2.0",
