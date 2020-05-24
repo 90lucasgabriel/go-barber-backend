@@ -14,10 +14,7 @@ describe('AuthenticateUser', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
-    createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
+
     authenticateUserService = new AuthenticateUserService(
       fakeUsersRepository,
       fakeHashProvider,
@@ -37,7 +34,7 @@ describe('AuthenticateUser', () => {
     };
 
     // Act
-    const user = await createUserService.execute(userData);
+    const user = await fakeUsersRepository.create(userData);
     const response = await authenticateUserService.execute(authData);
 
     // Assert
@@ -73,7 +70,7 @@ describe('AuthenticateUser', () => {
     };
 
     // Act
-    await createUserService.execute(userData);
+    await fakeUsersRepository.create(userData);
     const response = authenticateUserService.execute(authData);
 
     // Assert

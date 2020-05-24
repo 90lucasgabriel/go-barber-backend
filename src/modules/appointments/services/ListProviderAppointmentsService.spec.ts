@@ -1,16 +1,21 @@
 import 'reflect-metadata';
 import { uuid } from 'uuidv4';
 
-import ListProviderAppointmentsService from './ListProviderAppointmentsService';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
+import ListProviderAppointmentsService from './ListProviderAppointmentsService';
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let listProviderAppointmentsService: ListProviderAppointmentsService;
 describe('ListProviderAppointments', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    fakeCacheProvider = new FakeCacheProvider();
+
     listProviderAppointmentsService = new ListProviderAppointmentsService(
       fakeAppointmentsRepository,
+      fakeCacheProvider,
     );
   });
 
