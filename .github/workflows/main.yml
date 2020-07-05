@@ -33,8 +33,42 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: "."
-        target: "test"
+        source: ".,!node_modules"
+        target: "~/app/go-barber-backend"
     
+    # Instalar dependencias na Digital Ocean
+    - name: Install dependencies on Digital Ocean
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ~/app/go-barber-backend
+          yarn
+          
+    # Executar migrations
+    - name: Run migrations on Digital Ocean
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ~/app/go-barber-backend
+          ./node_modules/.bin/typeorm migration:run
+
+    # Reiniciar servidor
+    - name: Restart server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: pm2 restart gobarber-api
+          
     
       
