@@ -11,6 +11,6 @@ coverage/
 .DS_Store
 
 .env
-.ormconfig.json
+ormconfig.json
 dist/
 coverage
